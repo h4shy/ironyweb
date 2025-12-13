@@ -1,5 +1,5 @@
-# irony.now
+# ironyweb
 
-Just a newbie learning stuff as he slowly makes a tiny project
+Hosting very unimpressive pages on github, just to seperate my backend, that's what my brain likes to do :) 
 
 For legal/copyright/saying-hi: email me at owner@irony.now
