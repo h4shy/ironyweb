@@ -279,22 +279,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
     <script>
-        function xorEncrypt() {
-            text = 'imavibecodersohackingmeisnotanachievement';
-            key = 'jkimactuallytryingtolearnsoaddmeondiscord';
-            ciphertext = btoa([...text].map((c, i) => 
-                String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))
-            ).join(''));
-            console.log(ciphertext)
-        }
-
-        function xorDecrypt(key) {
-            const data = atob('BQEYBBoIGxoCQwEJFEVcRkdURlQFUgsECBsYBgheGlYHXhsDDAUcWghIQUcOHw0IAE9dRVgCBRodAEEACAEBFxpXRkMCUgsUQg==');
-            return [...data].map((c, i) => 
-                String.fromCharCode(c.charCodeAt(0) ^ key.charCodeAt(i % key.length))
-            ).join('');
-        }
-
         let searchTimeout = null;
 
         async function fetchConversionRates() {
@@ -337,9 +321,7 @@
 
         // Fetch data from API endpoint
         async function fetchData() {
-            const key = getApiEndpoint();
-            const endpoint = xorDecrypt(key)
-
+            const endpoint = getApiEndpoint();
             if (!endpoint) return [];
 
             try {
@@ -486,8 +468,6 @@
 
         // Initialize
         async function init() {
-            xorEncrypt()
-
             const rates = await fetchConversionRates();
             Object.assign(conversionRates, rates);
 
