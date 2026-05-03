@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EEMD Calculator 🔬</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom ddesign-like styling */
+        body {
+            background-color: #1e1e2e;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .ddesign-card {
+            background-color: #2a2d3e;
+            border-radius: 8px;
+            border-left: 4px solid #5865f2;
+            transition: all 0.3s ease;
+        }
+        .ddesign-card:hover {
+            background-color: #303348;
+            transform: translateY(-2px);
+        }
+        .ddesign-input {
+            background-color: #1a1b26;
+            border: 1px solid #404558;
+            color: white;
+            border-radius: 4px;
+            padding: 10px 12px;
+        }
+        .ddesign-input:focus {
+            outline: none;
+            border-color: #5865f2;
+            box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.3);
+        }
+        .ddesign-btn {
+            background-color: #5865f2;
+            color: white;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .ddesign-btn:hover {
+            background-color: #4752c4;
+        }
+        .ddesign-btn-secondary {
+            background-color: #404558;
+            color: white;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .ddesign-btn-secondary:hover {
+            background-color: #4a5168;
+        }
+        .glowing-text {
+            color: #5865f2;
+            text-shadow: 0 0 5px rgba(88, 101, 242, 0.5);
+        }
+        .result-box {
+            background-color: #1a1b26;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #5865f2;
+            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+        }
+        .tab-active {
+            background-color: #5865f2;
+            color: white;
+        }
+        .tab-inactive {
+            background-color: #404558;
+            color: #b9bbbe;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="py-6 px-4 md:px-8 border-b border-gray-700">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="flask" class="text-3xl glowing-text"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold">EEMD Calculator</h1>
+                </div>
+                <div class="text-sm text-gray-400">
+                    <i data-lucide="info" class="inline mr-1"></i>
+                    Hash's Formula for Ethanol's Effective Metabolic Disruption
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-8 py-8 flex-1">
+        <div class="max-w-3xl mx-auto">
+            <!-- Single Form Section -->
+            <div class="ddesign-card p-6">
+                <div class="flex items-center mb-6">
+                    <i data-lucide="flask" class="mr-3 text-purple-400"></i>
+                    <h2 class="text-xl font-bold">Ethanol's Effective Metabolic Disruption (in Calories)</h2>
+                </div>
+                <p class="text-gray-400 mb-6">Calculate the amount of calories you didn't burn because of alcohol. You can effectively add it to your consumed calories to approximate your daily surplus or deficit</p>
+                
+                <div class="space-y-6">
+                    <!-- Hormone Profile Selection -->
+                    <div>
+                        <label class="block mb-2 font-medium">Dominant Hormones</label>
+                        <div class="flex space-x-4">
+                            <button id="maleBtn" class="ddesign-btn-secondary flex-1 py-3">Androgenic</button>
+                            <button id="femaleBtn" class="ddesign-btn-secondary flex-1 py-3">Estrogenic</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Anthropometric Input Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Weight -->
+                        <div>
+                            <label class="block mb-2 font-medium">Weight</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="weight" class="ddesign-input flex-1" placeholder="e.g., 70" min="1" value="70">
+                                <select id="weightUnit" class="ddesign-input w-24">
+                                    <option value="kg">kg</option>
+                                    <option value="lbs">lbs</option>
+                                </select>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">1 kg = 2.20462 lbs</p>
+                        </div>
+                        
+                        <!-- Height -->
+                        <div>
+                            <label class="block mb-2 font-medium">Height</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="height" class="ddesign-input flex-1" placeholder="e.g., 175" min="1" value="175">
+                                <select id="heightUnit" class="ddesign-input w-24">
+                                    <option value="cm">cm</option>
+                                    <option value="in">inches</option>
+                                    <option value="ft-in">ft & in</option>
+                                </select>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">1 cm = 0.393701 inches</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Height Input for Feet/Inches -->
+                    <div id="heightFtInContainer" class="hidden">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block mb-2 font-medium">Feet</label>
+                                <input type="number" id="heightFt" class="ddesign-input w-full" placeholder="e.g., 5" min="1" value="5">
+                            </div>
+                            <div>
+                                <label class="block mb-2 font-medium">Inches</label>
+                                <input type="number" id="heightIn" class="ddesign-input w-full" placeholder="e.g., 9" min="0" max="11" value="9">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Age -->
+                    <div>
+                        <label class="block mb-2 font-medium">Age (years)</label>
+                        <input type="number" id="age" class="ddesign-input w-full" placeholder="e.g., 25" min="1" value="25">
+                    </div>
+                    
+                    
+                    <!-- Alcohol Input Section -->
+                    <div class="mt-8 pt-6 border-t border-gray-700">
+                        <div class="flex items-center mb-4">
+                            <i data-lucide="beer" class="mr-3 text-purple-400"></i>
+                            <h3 class="text-lg font-bold">Alcohol Consumption Input</h3>
+                        </div>
+                        
+                        <!-- Alcohol Input Method Tabs -->
+                        <div class="mb-6">
+                            <div class="flex border-b border-gray-700">
+                                <button id="standardTab" class="tab-active py-2 px-4 rounded-t-lg font-medium">Standard Drinks</button>
+                                <button id="customTab" class="tab-inactive py-2 px-4 rounded-t-lg font-medium">Custom Drink</button>
+                            </div>
+                            
+                            <!-- Standard Drinks Input -->
+                            <div id="standardInput" class="pt-6">
+                                <label class="block mb-2 font-medium">Number of Standard Drinks</label>
+                                <p class="text-gray-400 text-sm mb-4">A standard drink contains ~14g pure ethanol.</p>
+                                <input type="number" id="standardDrinks" class="ddesign-input w-full" placeholder="e.g., 2" min="0" step="0.5" value="2">
+                            </div>
+                            
+                            <!-- Custom Drink Input -->
+                            <div id="customInput" class="pt-6 hidden">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block mb-2 font-medium">Volume</label>
+                                        <div class="flex space-x-2">
+                                            <input type="number" id="volume" class="ddesign-input flex-1" placeholder="e.g., 500" min="1" value="500">
+                                            <select id="volumeUnit" class="ddesign-input w-24">
+                                                <option value="ml">ml</option>
+                                                <option value="oz">oz</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2 font-medium">Alcohol By Volume (ABV %)</label>
+                                        <input type="number" id="abv" class="ddesign-input w-full" placeholder="e.g., 5" min="0" max="100" step="0.1" value="5">
+                                    </div>
+                                    <div class="text-sm text-gray-400">
+                                        Standard drinks equivalent: <span id="customEquivalent">0</span> drinks
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Calculate Button -->
+                    <button id="calculateAll" class="ddesign-btn w-full py-3 flex items-center justify-center mt-6">
+                        <i data-lucide="brain" class="mr-2"></i>
+                        Calculate
+                    </button>
+                    
+                    <!-- Results Section -->
+                    <div class="mt-8">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <!-- BMR Results -->
+                            <div class="result-box"
+                            hidden=true>
+                                <h4 class="font-bold mb-2 flex items-center">
+                                    <i data-lucide="zap" class="mr-2 text-yellow-400"></i>
+                                    Hourly BMR
+                                </h4>
+                                <p class="text-gray-400 text-sm">Mifflin-St Jeor ÷ 24</p>
+                                <p class="text-2xl font-bold glowing-text" id="hourlyBmr">0 kcal</p>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Based on Mifflin-St Jeor formula
+                                </p>
+                            </div>
+                            
+                            <!-- Standard Drinks -->
+                            <div class="result-box"
+                            hidden=true>
+                                <h4 class="font-bold mb-2 flex items-center">
+                                    <i data-lucide="beer" class="mr-2 text-blue-400"></i>
+                                    Standard Drinks
+                                </h4>
+                                <p class="text-gray-400 text-sm">Ethanol equivalent</p>
+                                <p class="text-2xl font-bold" id="standardDrinksResult">0</p>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    ~14g ethanol per drink
+                                </p>
+                            </div>
+                            
+                            <!-- Final Result -->
+                            <div class="result-box border-2 border-purple-600">
+                                <h4 class="font-bold mb-2 flex items-center">
+                                    <i data-lucide="shield-alert" class="mr-2 text-red-400"></i>
+                                    Metabolic Disruption
+                                </h4>
+                                <p class="text-gray-400 text-sm">Result</p>
+                                <p class="text-3xl font-bold glowing-text" id="hashResultValue">0 kcal</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Formula Details -->
+                        <div class="result-box">
+                            <h4 class="font-bold mb-3 flex items-center">
+                                <i data-lucide="calculator" class="mr-2 text-green-400"></i>
+                                The Formula
+                            </h4>
+                            <div class="text-sm">
+                                <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-3">
+                                    <p>Metabolic Disruption = Hourly BMR × Standard Drinks</p>
+                                    <p class="mt-1">Standard Drinks = Grams of ethanol / 14</p>
+                                </div>
+                                <p class="text-xs text-gray-500">
+                                    BMR = 10×weight(kg) + 6.25×height(cm) - 5×age + 5 (male) or -161 (female)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Information Box -->
+                    <div class="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
+                        <div class="flex items-start">
+                            <i data-lucide="alert-circle" class="mr-3 text-blue-400"></i>
+                            <div>
+                                <h4 class="font-medium mb-1">About Hash's Formula</h4>
+                                <p class="text-gray-400 text-sm">
+                                    This formula provides a caloric estimation of the metabolic disruption caused by ethanol consumption by multiplying the hourly basal metabolic rate by the amount of hours it takes to process  ethanol.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Credit -->
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <p>Hash's Formula for Ethanol's Effective Metabolic Disruption. BMR calculation based on Mifflin-St Jeor formula.</p>
+            <p class="mt-1">This tool is for educational purposes only.</p>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // DOM Elements
+        const maleBtn = document.getElementById('maleBtn');
+        const femaleBtn = document.getElementById('femaleBtn');
+        const weightInput = document.getElementById('weight');
+        const weightUnit = document.getElementById('weightUnit');
+        const heightInput = document.getElementById('height');
+        const heightUnit = document.getElementById('heightUnit');
+        const heightFtInContainer = document.getElementById('heightFtInContainer');
+        const heightFtInput = document.getElementById('heightFt');
+        const heightInInput = document.getElementById('heightIn');
+        const ageInput = document.getElementById('age');
+        const calculateAllBtn = document.getElementById('calculateAll');
+        const hourlyBmrSpan = document.getElementById('hourlyBmr');
+        const standardDrinksResultSpan = document.getElementById('standardDrinksResult');
+        const hashResultValueSpan = document.getElementById('hashResultValue');
+        
+        const standardTab = document.getElementById('standardTab');
+        const customTab = document.getElementById('customTab');
+        const standardInputDiv = document.getElementById('standardInput');
+        const customInputDiv = document.getElementById('customInput');
+        const standardDrinksInput = document.getElementById('standardDrinks');
+        const volumeInput = document.getElementById('volume');
+        const volumeUnit = document.getElementById('volumeUnit');
+        const abvInput = document.getElementById('abv');
+        const customEquivalentSpan = document.getElementById('customEquivalent');
+        
+        // Global variables
+        let hourlyBmr = 0;
+        let isMale = true;
+        let activeAlcoholTab = 'standard';
+        
+        // Hormone profile selection
+        maleBtn.addEventListener('click', () => {
+            isMale = true;
+            maleBtn.classList.replace('ddesign-btn-secondary', 'ddesign-btn');
+            femaleBtn.classList.replace('ddesign-btn', 'ddesign-btn-secondary');
+        });
+        
+        femaleBtn.addEventListener('click', () => {
+            isMale = false;
+            femaleBtn.classList.replace('ddesign-btn-secondary', 'ddesign-btn');
+            maleBtn.classList.replace('ddesign-btn', 'ddesign-btn-secondary');
+        });
+        
+        // Height unit change handler
+        heightUnit.addEventListener('change', function() {
+            if (this.value === 'ft-in') {
+                heightFtInContainer.classList.remove('hidden');
+                heightInput.parentElement.classList.add('hidden');
+            } else {
+                heightFtInContainer.classList.add('hidden');
+                heightInput.parentElement.classList.remove('hidden');
+            }
+        });
+        
+        // Alcohol Tab Switching
+        standardTab.addEventListener('click', () => {
+            activeAlcoholTab = 'standard';
+            standardTab.classList.replace('tab-inactive', 'tab-active');
+            customTab.classList.replace('tab-active', 'tab-inactive');
+            standardInputDiv.classList.remove('hidden');
+            customInputDiv.classList.add('hidden');
+        });
+        
+        customTab.addEventListener('click', () => {
+            activeAlcoholTab = 'custom';
+            customTab.classList.replace('tab-inactive', 'tab-active');
+            standardTab.classList.replace('tab-active', 'tab-inactive');
+            customInputDiv.classList.remove('hidden');
+            standardInputDiv.classList.add('hidden');
+            updateCustomEquivalent();
+        });
+        
+        // Unit conversion functions
+        function convertWeightToKg(weight, unit) {
+            if (unit === 'kg') return weight;
+            return weight * 0.453592; // lbs to kg
+        }
+        
+        function convertHeightToCm(height, unit) {
+            if (unit === 'cm') return height;
+            if (unit === 'in') return height * 2.54; // inches to cm
+            return height; // ft-in handled separately
+        }
+        
+        function convertVolumeToMl(volume, unit) {
+            if (unit === 'ml') return volume;
+            return volume * 29.5735; // oz to ml
+        }
+        
+        // Update custom drink equivalent
+        function updateCustomEquivalent() {
+            const volume = parseFloat(volumeInput.value) || 0;
+            const volumeUnitValue = volumeUnit.value;
+            const abv = parseFloat(abvInput.value) || 0;
+            
+            // Convert volume to ml
+            const volumeMl = convertVolumeToMl(volume, volumeUnitValue);
+            
+            // Standard drink calculation: volume(ml) × ABV(%) × 0.789 ÷ 14
+            // 0.789 is density of ethanol (g/ml), 14g is ethanol in standard drink
+            const ethanolGrams = volumeMl * (abv / 100) * 0.789;
+            const standardDrinksEquivalent = ethanolGrams / 14;
+            
+            customEquivalentSpan.textContent = standardDrinksEquivalent.toFixed(2);
+        }
+        
+        volumeInput.addEventListener('input', updateCustomEquivalent);
+        abvInput.addEventListener('input', updateCustomEquivalent);
+        volumeUnit.addEventListener('change', updateCustomEquivalent);
+        
+        // Complete Calculation
+        calculateAllBtn.addEventListener('click', () => {
+            // Get weight and convert to kg
+            const weight = parseFloat(weightInput.value);
+            const weightUnitValue = weightUnit.value;
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight.');
+                return;
+            }
+            const weightKg = convertWeightToKg(weight, weightUnitValue);
+            
+            // Get height and convert to cm
+            let heightCm;
+            if (heightUnit.value === 'ft-in') {
+                const feet = parseFloat(heightFtInput.value) || 0;
+                const inches = parseFloat(heightInInput.value) || 0;
+                if (feet <= 0) {
+                    alert('Please enter a valid height in feet.');
+                    return;
+                }
+                heightCm = (feet * 12 + inches) * 2.54;
+            } else {
+                const height = parseFloat(heightInput.value);
+                if (!height || height <= 0) {
+                    alert('Please enter a valid height.');
+                    return;
+                }
+                heightCm = convertHeightToCm(height, heightUnit.value);
+            }
+            
+            // Get age
+            const age = parseFloat(ageInput.value);
+            if (!age || age <= 0) {
+                alert('Please enter a valid age.');
+                return;
+            }
+            
+            // Calculate BMR (Mifflin-St Jeor)
+            let bmr;
+            if (isMale) {
+                bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+            } else {
+                bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+            }
+            
+            hourlyBmr = bmr / 24;
+            
+            // Calculate standard drinks
+            let standardDrinks;
+            if (activeAlcoholTab === 'standard') {
+                standardDrinks = parseFloat(standardDrinksInput.value) || 0;
+                if (standardDrinks < 0) {
+                    alert('Please enter a valid number of standard drinks.');
+                    return;
+                }
+            } else {
+                const volume = parseFloat(volumeInput.value) || 0;
+                const abv = parseFloat(abvInput.value) || 0;
+                if (volume <= 0) {
+                    alert('Please enter a valid volume.');
+                    return;
+                }
+                if (abv < 0 || abv > 100) {
+                    alert('Please enter a valid ABV (0-100%).');
+                    return;
+                }
+                
+                const volumeMl = convertVolumeToMl(volume, volumeUnit.value);
+                const ethanolGrams = volumeMl * (abv / 100) * 0.789;
+                standardDrinks = ethanolGrams / 14;
+            }
+            
+            // Hash's Formula: Hourly BMR × Standard Drinks
+            const hashResult = hourlyBmr * standardDrinks;
+            
+            // Update UI
+            hourlyBmrSpan.textContent = `${hourlyBmr.toFixed(2)} kcal`;
+            standardDrinksResultSpan.textContent = standardDrinks.toFixed(2);
+            hashResultValueSpan.textContent = `${hashResult.toFixed(2)} kcal`;
+            
+            // Add visual effects
+            [hourlyBmrSpan, standardDrinksResultSpan, hashResultValueSpan].forEach(el => {
+                el.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    el.style.transform = 'scale(1)';
+                }, 300);
+            });
+        });
+        
+        // Initialize
+        updateCustomEquivalent();
+    </script>
+</body>
+</html>
